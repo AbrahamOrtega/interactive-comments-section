@@ -90,23 +90,26 @@ export default function CommentInput({
   };
 
   return (
-    <div className="flex w-full px-5 py-6 bg-white rounded-lg gap-x-4">
-      <Image
-        src={currentUser.image.png}
-        alt="user"
-        width={40}
-        height={40}
-        className="w-10 h-10"
-      />
-      <textarea
-        className="w-full h-24 p-2 rounded border border-lightGray outline-moderateBlue"
-        value={commentValue}
-        onChange={(e) => setComment(e.target.value)}
-        placeholder={"Add a comment..."}
-        style={{ resize: "none" }}
-      />
+    <div className="flex flex-col md:flex-row w-full px-5 py-6 bg-white rounded-lg gap-x-4">
+      <div className="flex w-full gap-x-4">
+        <Image
+          src={currentUser.image.png}
+          alt="user"
+          width={40}
+          height={40}
+          className="w-10 h-10"
+        />
+        <textarea
+          className="w-full h-24 p-2 rounded border border-lightGray outline-moderateBlue"
+          value={commentValue}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder={"Add a comment..."}
+          style={{ resize: "none" }}
+        />
+      </div>
+
       <button
-        className="flex w-fit h-fit px-4 py-2 text-white bg-moderateBlue rounded hover:bg-lightGrayishBlue"
+        className="flex w-fit h-fit px-4 py-2 self-end mt-4 md:mt-0 text-white bg-moderateBlue rounded hover:bg-lightGrayishBlue"
         onClick={handleSubmit}
       >
         {type === "comment" ? "SEND" : "REPLY"}

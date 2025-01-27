@@ -21,7 +21,7 @@ export default function DeleteModal({
           <h2 className="text-2xl font-bold text-darkBlue">Delete Comment</h2>
           <p className="text-grayishBlue mt-4">
             Are you sure you want to delete this comment? This will remove the
-            comment and can't be undone.
+            comment and can&apos;t be undone.
           </p>
           <div className="flex justify-between mt-8 gap-x-4 text-[16px]">
             <button

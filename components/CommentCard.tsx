@@ -31,7 +31,7 @@ export default function CommentCard({
   const [reply, setReply] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [replyTo, setReplyTo] = useState<string | null>(
+  const [replyTo] = useState<string | null>(
     "replyingTo" in comment ? comment.replyingTo : null
   );
   const [commentEdit, setCommentEdit] = useState<string>(comment.content);
@@ -120,7 +120,6 @@ export default function CommentCard({
 
   const deleteComment = () => {
     if (currentUser.username !== comment.user.username) return;
-    console.log("replies" in comment);
     if ("replies" in comment) {
       setCommentsList(commentsList.filter((comm) => comm.id !== comment.id));
     } else {
@@ -135,7 +134,6 @@ export default function CommentCard({
         }
         return commentMap;
       });
-      console.log({ newCommentsList, comment, replyToId });
       setCommentsList(newCommentsList);
     }
     setDeleteModal(false);
@@ -144,65 +142,42 @@ export default function CommentCard({
   return (
     <div key={key} className="flex flex-col w-full">
       {/* Comment card */}
-      <div className="flex w-full p-6 bg-white rounded-lg gap-x-6">
+      <div className="flex flex-col-reverse md:flex-row w-full p-6 bg-white rounded-lg gap-6">
         {/* Rate comment*/}
-        <div className="flex flex-col h-fit py-2 px-3 bg-lightGray rounded-lg gap-y-3">
-          <button
-            className={`flex w-full justify-center ${
-              currentUser.username === comment.user.username
-                ? "cursor-not-allowed"
-                : "cursor-pointer"
-            }`}
-            onClick={handleRatePlus}
-          >
-            <FaPlus
-              className={` hover:text-moderateBlue ${
-                plus ? "text-moderateBlue" : "text-lightGrayishBlue"
+        <div className="flex w-full md:w-fit justify-between">
+          <div className="flex flex-row md:flex-col w-fit h-fit items-center py-2 px-3 bg-lightGray rounded-lg gap-3">
+            <button
+              className={`flex w-full justify-center ${
+                currentUser.username === comment.user.username
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
               }`}
-            />
-          </button>
-          <p className="text-moderateBlue font-[700] text-center">{rate}</p>
-          <button
-            className={`flex w-full justify-center ${
-              currentUser.username === comment.user.username
-                ? "cursor-not-allowed"
-                : "cursor-pointer"
-            }`}
-            onClick={handleRateMinus}
-          >
-            <FaMinus
-              className={` hover:text-moderateBlue ${
-                minus ? "text-moderateBlue" : "text-lightGrayishBlue"
-              }`}
-            />
-          </button>
-        </div>
-
-        {/* Comment */}
-        <div className="flex w-full flex-col gap-y-4">
-          {/* Comment header */}
-          <div className="flex w-full justify-between">
-            {/* User */}
-            <div className="flex items-center gap-x-4">
-              <Image
-                src={comment.user.image.png}
-                alt="User"
-                width={32}
-                height={32}
-                className="rounded-full"
+              onClick={handleRatePlus}
+            >
+              <FaPlus
+                className={` hover:text-moderateBlue ${
+                  plus ? "text-moderateBlue" : "text-lightGrayishBlue"
+                }`}
               />
-              <p className="text-darkBlue font-[700]">
-                {comment.user.username}
-              </p>
-              {/* You */}
-              {currentUser.username === comment.user.username && (
-                <p className="text-white bg-moderateBlue -ml-2 px-1 rounded font-[500]">
-                  you
-                </p>
-              )}
-              <p className="text-grayishBlue font-[400]">{comment.createdAt}</p>
-            </div>
-            {/* Reply and edit */}
+            </button>
+            <p className="text-moderateBlue font-[700] text-center">{rate}</p>
+            <button
+              className={`flex w-full justify-center ${
+                currentUser.username === comment.user.username
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
+              onClick={handleRateMinus}
+            >
+              <FaMinus
+                className={` hover:text-moderateBlue ${
+                  minus ? "text-moderateBlue" : "text-lightGrayishBlue"
+                }`}
+              />
+            </button>
+          </div>
+          {/* Reply and edit */}
+          <div className="flex md:hidden">
             {currentUser.username === comment.user.username ? (
               <div className="flex gap-x-4">
                 <button
@@ -236,6 +211,69 @@ export default function CommentCard({
                 Reply
               </button>
             )}
+          </div>
+        </div>
+
+        {/* Comment */}
+        <div className="flex w-full flex-col gap-y-4">
+          {/* Comment header */}
+          <div className="flex w-full justify-between">
+            {/* User */}
+            <div className="flex items-center gap-x-4">
+              <Image
+                src={comment.user.image.png}
+                alt="User"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+              <p className="text-darkBlue font-[700]">
+                {comment.user.username}
+              </p>
+              {/* You */}
+              {currentUser.username === comment.user.username && (
+                <p className="text-white bg-moderateBlue -ml-2 px-1 rounded font-[500]">
+                  you
+                </p>
+              )}
+              <p className="text-grayishBlue font-[400]">{comment.createdAt}</p>
+            </div>
+            {/* Reply and edit */}
+            <div className="hidden md:flex">
+              {currentUser.username === comment.user.username ? (
+                <div className="flex gap-x-4">
+                  <button
+                    className="flex gap-x-1 items-center text-softRed hover:text-paleRed"
+                    onClick={() => setDeleteModal(true)}
+                  >
+                    <MdDelete />
+                    <p className="font-[700]">Delete</p>
+                  </button>
+                  <DeleteModal
+                    open={deleteModal}
+                    setOpen={setDeleteModal}
+                    deleteComment={deleteComment}
+                  />
+                  <button
+                    className="flex gap-x-1 items-center text-moderateBlue hover:text-lightGrayishBlue"
+                    onClick={() => setEdit(!edit)}
+                  >
+                    <MdEdit />
+                    <p className="font-[700]">Edit</p>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className={`flex items-center hover:text-lightGrayishBlue font-[700] ${
+                    reply ? "text-lightGrayishBlue" : "text-moderateBlue"
+                  }`}
+                  onClick={() => setReply(!reply)}
+                >
+                  <FaReply className="mr-2" />
+                  Reply
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Comment body */}
@@ -283,7 +321,7 @@ export default function CommentCard({
       {/* Replies Section*/}
       {"replies" in comment && comment.replies.length > 0 && (
         <div className="flex w-full h-fit mt-4">
-          <div className="flex flex-grow w-[2px] mx-10 h-auto bg-grayishBlue opacity-15" />
+          <div className="flex flex-grow w-[2px] mr-4 md:mx-10 h-auto bg-grayishBlue opacity-15" />
           {/* Replies */}
           <div className="flex w-full flex-col gap-y-4">
             {comment.replies &&

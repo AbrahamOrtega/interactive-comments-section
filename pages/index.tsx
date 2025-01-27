@@ -21,7 +21,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex items-center justify-center py-12">
+    <div className="flex items-center justify-center py-12 px-4">
       <div className="flex flex-col w-full max-w-[740px] gap-y-4">
         {/* Comments */}
         <div className="flex flex-col w-full gap-y-4">
